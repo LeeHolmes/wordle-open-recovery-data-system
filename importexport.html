@@ -1,0 +1,83 @@
+<html>
+
+<head>
+    <script>
+        function onInputChange()
+        {
+            var userData = JSON.parse('{"currentStreak":0,"maxStreak":0,"guesses":{"1":0,"2":0,"3":0,"4":0,"5":0,"6":0,"fail":0},"winPercentage":0,"gamesPlayed":0,"gamesWon":0,"averageGuesses":0}')
+            
+            userData.gamesPlayed = parseInt(document.getElementById("played").value);
+            userData.winPercentage = parseInt(document.getElementById("winPercent").value.replace(/\D/g,''));
+            userData.currentStreak = parseInt(document.getElementById("currentStreak").value);
+            userData.maxStreak = parseInt(document.getElementById("maxStreak").value);
+            
+            userData.guesses["1"] = parseInt(document.getElementById("guess1").value);
+            userData.guesses["2"] = parseInt(document.getElementById("guess2").value);
+            userData.guesses["3"] = parseInt(document.getElementById("guess3").value);
+            userData.guesses["4"] = parseInt(document.getElementById("guess4").value);
+            userData.guesses["5"] = parseInt(document.getElementById("guess5").value);
+            userData.guesses["6"] = parseInt(document.getElementById("guess6").value);
+
+            var gamesWon = userData.guesses["1"] + userData.guesses["2"] + userData.guesses["3"] + userData.guesses["4"] +
+                userData.guesses["5"] + userData.guesses["6"]
+            userData.gamesWon = gamesWon;
+            userData.guesses["fail"] = userData.gamesPlayed - gamesWon;
+            
+            var averageGuesses = Math.round(
+                (userData.guesses["1"] + (2 * userData.guesses["2"]) + (3 * userData.guesses["3"])  +
+                (4 * userData.guesses["4"]) + (5 * userData.guesses["5"]) + (6 * userData.guesses["6"])) / userData.gamesWon);
+            userData.averageGuesses = averageGuesses;
+
+            document.getElementById("wordsExport").value = JSON.stringify(userData);
+        }
+
+        function importData()
+        {
+            userData = JSON.parse(document.getElementById("wordsExport").value);           
+            window.localStorage.setItem("statistics", document.getElementById("wordsExport").value);
+            
+            var gameState = JSON.parse(window.localStorage.getItem("gameState"));
+            gameState.lastCompletedTs = new Date(new Date()).setHours(0,0,0,0) - (1 * 60 * 60 * 1000)
+            gameState.lastPlayedTs = new Date(new Date()).setHours(0,0,0,0) - (1 * 60 * 60 * 1000)
+            window.localStorage.setItem("gameState", JSON.stringify(gameState));
+
+            document.getElementById("played").value = userData.gamesPlayed;
+            document.getElementById("winPercent").value = userData.winPercentage;
+            document.getElementById("currentStreak").value = userData.currentStreak;
+            document.getElementById("maxStreak").value = userData.maxStreak;
+
+            document.getElementById("guess1").value = userData.guesses["1"];
+            document.getElementById("guess2").value = userData.guesses["2"];
+            document.getElementById("guess3").value = userData.guesses["3"];
+            document.getElementById("guess4").value = userData.guesses["4"];
+            document.getElementById("guess5").value = userData.guesses["5"];
+            document.getElementById("guess6").value = userData.guesses["6"];
+        }
+    </script>
+</head>
+<body>
+
+Played: <input type="text" id="played" /><br />
+Win Percent: <input type="text" id="winPercent" /><br />
+Current streak: <input type="text" id="currentStreak" /><br />
+Max streak: <input type="text" id="maxStreak" /><br />
+<br />
+Won in 1: <input type="text" id="guess1" /><br />
+Won in 2: <input type="text" id="guess2" /><br />
+Won in 3: <input type="text" id="guess3" /><br />
+Won in 4: <input type="text" id="guess4" /><br />
+Won in 5: <input type="text" id="guess5" /><br />
+Won in 6: <input type="text" id="guess6" /><br />
+<br />
+<button onclick="onInputChange()">Export</button>
+<br /><br /><br />
+
+Wordle Open Recovery Data System (WORDS) data:<br /><br />
+<input type="text" id="wordsExport" style="width:100%" /><br />
+<br /><br />
+
+<button onclick="importData()">Import</button>
+<br /><br />
+
+</body>
+</html>
