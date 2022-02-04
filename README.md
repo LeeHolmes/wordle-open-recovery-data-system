@@ -1,4 +1,4 @@
-# Wordle Open Rrecovery Data System ("WORDS")
+# Wordle Open Recovery Data System ("WORDS")
 ## An open standard schema for importing and exporting Wordle state
 
 With the proliferation of Wordle clones out there, the industry *deparately* needs an open standard schema for data interchange among them. Wordle lock-in is real, and we deserve the right of data sovereignty of our guess distribution and active win streak.
